@@ -90,6 +90,18 @@ def readone_sj(sjno: int, db: Session = Depends(get_db)):
         db.commit()
     return sungjuk
 
+# 성적 수정 - 학생번호로 조회
+# 먼저, 수정할 학생 데이터가 있는지 확인한 후 수정 실행
+@app.put('/sj', response_model=Optional[SungjukModel])
+def update_sj(sj: SungjukModel, db: Session = Depends(get_db)):
+    sungjuk = db.query(Sungjuk).filter(Sungjuk.sjno == sj.sjno).first()
+    if sungjuk:
+        for key, val in sj.dict().items():
+            setattr(sungjuk, key, val)
+        db.commit()
+        db.refresh(sungjuk)
+    return sungjuk
+
 # __name__: 실행중인 모듈 이름을 의미하는 매직키워드
 # 만일, 파일을 직접 실행하면 __name__의 이름은 __main__으로 자동지정
 if __name__ == "__main__":
