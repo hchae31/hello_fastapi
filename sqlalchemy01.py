@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
@@ -73,10 +73,12 @@ def sjadd(sj: SungjukModel, db: Session = Depends(get_db)):
     # py : Sungjuk(name='?', kor=?, eng=?, mat=?)
     # sa : Sungjuk(sj['name'], sj['kor'], sj['eng'], sj['mat'])
 
-    db.add(sj)
-    db.commit()
-    db.refresh(sj)
-    return sj
+# 성적 상세 조회 - 학생번호로 조회
+
+@app.get('/sj/{sjno}', response_model=Optional[SungjukModel])
+def readone_sj(sjno: int, db: Session = Depends(get_db)):
+    sungjuk = db.query(Sungjuk).filter(Sungjuk.sjno == sjno).first()
+    return sungjuk
 
 # __name__: 실행중인 모듈 이름을 의미하는 매직키워드
 # 만일, 파일을 직접 실행하면 __name__의 이름은 __main__으로 자동지정
