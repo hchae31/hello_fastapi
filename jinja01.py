@@ -61,10 +61,13 @@ def getsido():
 @app.get('/zipcode2/{dong}', response_class=HTMLResponse)
 def zipcode(dong: str, req: Request):
     # 입력한 동으로 zipcode에서 검색하고 결과를 result에 저장
-    with Session(engine) as sess:
-        stmt = select(Zipcode).where(Zipcode.dong.like(f'{dong}%'))
-        result = sess.scalars(stmt).all()
+    # with Session(engine) as sess:
+    #     stmt = select(Zipcode).where(Zipcode.dong.like(f'{dong}%'))
+    #     result = sess.scalars(stmt).all()
 
+    with Session(engine) as sess:
+        where = select(Zipcode).where(Zipcode.dong.like(f'{dong}%'))
+        result = sess.scalars(Zipcode).filter(where).all()
     # 저장된 검색 결과를 템플릿 엔진을 이용해서 html 결과문서를 만들기 위해
     # TemplateResponese 함수 호출
     return templates.TemplateResponse('zipcode.html',
