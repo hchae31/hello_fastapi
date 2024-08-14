@@ -1,8 +1,6 @@
 from typing import List
-
 from fastapi import FastAPI
 from pydantic import BaseModel
-
 
 # pydantic
 # 데이터 유효성 검사 및 직렬화/역직렬화 지원 도구
@@ -66,8 +64,8 @@ def sjone(name: str):
             findone = sj
     return findone
 
-# 성적데잍처 삭제 -이름으로삭제
-@app.delete('/sj/{name}',response_model=Sungjuk)
+# 성적데이터 삭제 -이름으로삭제
+@app.delete('/sj/{name}', response_model=Sungjuk)
 def sjrmv(name: str):
     rmvone = Sungjuk(name='none', kor=00, eng=00, mat=00)
     for idx, sj  in enumerate(sungjuk_db):
